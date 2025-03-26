@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Bright-money</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tab-container {
+            margin-top: 20px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #e6e6e6;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background: #2c3e50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        form {
+            display: grid;
+            grid-gap: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+        }
+        button {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #1a252f;
+        }
+        .response-area {
+            margin-top: 20px;
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            min-height: 100px;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>{{ project_name }} - {{ version }}</h1>
+            <p>An interactive interface for managing credit services.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" data-tab="register">Register User</div>
+                <div class="tab" data-tab="apply">Apply Loan</div>
+                <div class="tab" data-tab="payment">Make Payment</div>
+                <div class="tab" data-tab="statement">Get Statement</div>
+            </div>
+
+            <!-- Register User Tab -->
+            <div class="tab-content active" id="register-tab">
+                <div class="card">
+                    <h2>Register User</h2>
+                    <form id="register-form">
+                        <div>
+                            <label for="aadhar_id">Aadhar ID:</label>
+                            <input type="text" id="aadhar_id" name="aadhar_id" required>
+                        </div>
+                        <div>
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div>
+                            <label for="email_id">Email:</label>
+                            <input type="email" id="email_id" name="email_id" required>
+                        </div>
+                        <div>
+                            <label for="annual_income">Annual Income (₹):</label>
+                            <input type="number" id="annual_income" name="annual_income" min="0" step="0.01" required>
+                        </div>
+                        <button type="submit">Register User</button>
+                    </form>
+                    <div class="response-area" id="register-response"></div>
+                </div>
+            </div>
+
+            <!-- Apply Loan Tab -->
+            <div class="tab-content" id="apply-tab">
+                <div class="card">
+                    <h2>Apply for Loan</h2>
+                    <form id="apply-form">
+                        <div>
+                            <label for="unique_user_id">User ID:</label>
+                            <input type="text" id="unique_user_id" name="unique_user_id" required>
+                        </div>
+                        <div>
+                            <label for="loan_type">Loan Type:</label>
+                            <select id="loan_type" name="loan_type" required>
+                                <option value="CREDIT_CARD">Credit Card Loan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="loan_amount">Loan Amount (₹):</label>
+                            <input type="number" id="loan_amount" name="loan_amount" min="0" max="5000" step="0.01" required>
+                        </div>
+                        <div>
+                            <label for="interest_rate">Interest Rate (%):</label>
+                            <input type="number" id="interest_rate" name="interest_rate" min="0" max="30" step="0.01" required>
+                        </div>
+                        <div>
+                            <label for="term_period">Term Period (months):</label>
+                            <input type="number" id="term_period" name="term_period" min="1" required>
+                        </div>
+                        <div>
+                            <label for="disbursement_date">Disbursement Date:</label>
+                            <input type="date" id="disbursement_date" name="disbursement_date" required>
+                        </div>
+                        <button type="submit">Apply for Loan</button>
+                    </form>
+                    <div class="response-area" id="apply-response"></div>
+                </div>
+            </div>
+
+            <!-- Make Payment Tab -->
+            <div class="tab-content" id="payment-tab">
+                <div class="card">
+                    <h2>Make Payment</h2>
+                    <form id="payment-form">
+                        <div>
+                            <label for="loan_id">Loan ID:</label>
+                            <input type="text" id="loan_id" name="loan_id" required>
+                        </div>
+                        <div>
+                            <label for="amount">Payment Amount (₹):</label>
+                            <input type="number" id="amount" name="amount" min="0" step="0.01" required>
+                        </div>
+                        <button type="submit">Make Payment</button>
+                    </form>
+                    <div class="response-area" id="payment-response"></div>
+                </div>
+            </div>
+
+            <!-- Get Statement Tab -->
+            <div class="tab-content" id="statement-tab">
+                <div class="card">
+                    <h2>Get Loan Statement</h2>
+                    <form id="statement-form">
+                        <div>
+                            <label for="statement_loan_id">Loan ID:</label>
+                            <input type="text" id="statement_loan_id" name="loan_id" required>
+                        </div>
+                        <button type="submit">Get Statement</button>
+                    </form>
+                    <div class="response-area" id="statement-response"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                
+                // Deactivate all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Activate selected tab
+                tab.classList.add('active');
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+            });
+        });
+
+        // Format JSON for display
+        function formatJsonResponse(data) {
+            return JSON.stringify(data, null, 2);
+        }
+
+        // Handle form submissions
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const responseArea = document.getElementById('register-response');
+            
+            try {
+                const response = await fetch('/api/register-user/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseArea.innerHTML = `<div class="success">User registered successfully!</div>\n${formatJsonResponse(data)}`;
+                } else {
+                    responseArea.innerHTML = `<div class="error">Error: ${data.error || 'Unknown error'}</div>\n${formatJsonResponse(data)}`;
+                }
+            } catch (error) {
+                responseArea.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        });
+
+        document.getElementById('apply-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const responseArea = document.getElementById('apply-response');
+            
+            try {
+                const response = await fetch('/api/apply-loan/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseArea.innerHTML = `<div class="success">Loan application successful!</div>\n${formatJsonResponse(data)}`;
+                } else {
+                    responseArea.innerHTML = `<div class="error">Error: ${data.error || 'Unknown error'}</div>\n${formatJsonResponse(data)}`;
+                }
+            } catch (error) {
+                responseArea.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        });
+
+        document.getElementById('payment-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const responseArea = document.getElementById('payment-response');
+            
+            try {
+                const response = await fetch('/api/make-payment/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseArea.innerHTML = `<div class="success">Payment successful!</div>\n${formatJsonResponse(data)}`;
+                } else {
+                    responseArea.innerHTML = `<div class="error">Error: ${data.error || 'Unknown error'}</div>\n${formatJsonResponse(data)}`;
+                }
+            } catch (error) {
+                responseArea.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        });
+
+        document.getElementById('statement-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const responseArea = document.getElementById('statement-response');
+            const loanId = formData.get('loan_id');
+            
+            try {
+                const response = await fetch(`/api/get-statement/?loan_id=${loanId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseArea.innerHTML = `<div class="success">Statement retrieved successfully!</div>\n${formatJsonResponse(data)}`;
+                } else {
+                    responseArea.innerHTML = `<div class="error">Error: ${data.error || 'Unknown error'}</div>\n${formatJsonResponse(data)}`;
+                }
+            } catch (error) {
+                responseArea.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>
